@@ -26,15 +26,15 @@
     <div class="login-form">
         <div class="login-content">
             <h1 class="title_name">账户登录</h1>
-            <form method="post" role="form" id="form_login" class="login_padding">
+            <form method="post" role="form" id="form_login" class="login_padding" th:action="@{~/userLogin}">
                 <div class="form-group clearfix">
 
                     <div class="input-group">
                         <div class="input-group-addon">
                             <i class="icon_user"></i>
                         </div>
-
-                        <input type="text" class="form-control" name="username" id="username" placeholder="手机号"
+                        <!--手机号-->
+                        <input type="text" class="form-control" name="phone" id="username" placeholder="手机号"
                                autocomplete="off">
                     </div>
 
@@ -46,7 +46,7 @@
                         <div class="input-group-addon">
                             <i class="icon_password"></i>
                         </div>
-
+                        <!--密码-->
                         <input type="password" class="form-control" name="password" id="password" placeholder="密码"
                                autocomplete="off">
                     </div>
@@ -55,8 +55,7 @@
                 <div class=" textright"><a href="#" class="forget">忘记密码？</a></div>
                 <div class="tishi"></div>
                 <div class="form-group">
-                    <a href="/index" type="submit" class="btn btn-danger btn-block btn-login"
-                       onClick="cliLogin()">
+                    <a href="javascript:;" type="submit" class="btn btn-danger btn-block btn-login" onClick="cliLogin()">
                         <i class="fa fa-sign-in"></i>
                         登录
                     </a>
@@ -64,10 +63,7 @@
                 <div class=" textright"><a href="/register" class="forget">立即注册</a></div>
                 <!-- Implemented in v1.1.4 -->
                 <div class="form-group">
-
                 </div>
-
-
             </form>
         </div>
 
@@ -78,5 +74,10 @@
 <script src="js/TweenLite/EasePack.min.js"></script>
 <script src="js/TweenLite/rAF.js"></script>
 <script src="js/TweenLite/demo-1.js"></script>
+<script type="text/javascript" >
+    function cliLogin() {
+        $("#form_login").submit();
+    }
+</script>
 </body>
 </html>

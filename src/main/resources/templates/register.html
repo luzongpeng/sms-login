@@ -1,5 +1,6 @@
 <!doctype html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -28,9 +29,15 @@
             <h1 class="title_name">用户注册</h1>
             <div class="step-header">
                 <ul>
-                    <li><p>输入电话</p></li>
-                    <li><p>确认密码</p></li>
-                    <li><p>成功</p></li>
+                    <li>
+                        <p>输入电话</p>
+                    </li>
+                    <li>
+                        <p>确认密码</p>
+                    </li>
+                    <li>
+                        <p>成功</p>
+                    </li>
                 </ul>
             </div>
             <div class="step-content">
@@ -38,29 +45,31 @@
                     <form role="form" id="form_login" class="">
                         <div class="form-group clearfix">
                             <div class="input-group col-lg-8 col-md-8 col-xs-8">
-                                <div class="input-group-addon"><i class="icon_phone"></i></div>
-                                <!--						手机号-->
-                                <input type="text" class="form-control text_phone" name="phone" id="phone"
-                                       placeholder="你的手机号" autocomplete="off">
+                                <div class="input-group-addon">
+                                    <i class="icon_phone"></i>
+                                </div>
+                                <!-- 手机号 -->
+                                <input type="text" class="form-control text_phone" name="phone" id="phone" placeholder="你的手机号" autocomplete="off">
                             </div>
                             <div class="col-lg-4 col-md-4 col-xs-4 fl">
-<!--								发送验证码-->
-								<input type="button" id="sms-input" class="btn_mfyzm" value="获取验证码" onclick="SendSMS()"/>
+                                <!-- 发送验证码 -->
+                                <input type="button" id="sms-input" class="btn_mfyzm" value="获取验证码" onclick="SendSMS()" />
                             </div>
                         </div>
                         <div class="form-group clearfix">
                             <div class="input-group">
-                                <div class="input-group-addon"><i class="icon_yanzhen"></i></div>
-<!--								短信验证码-->
-                                <input type="text" class="form-control" name="Verification" id="Verification"
-                                       placeholder="短信验证码" autocomplete="off">
+                                <div class="input-group-addon">
+                                    <i class="icon_yanzhen"></i>
+                                </div>
+                                <!-- 输入验证码 -->
+                                <input type="text" class="form-control" name="Verification" id="sms-code" placeholder="短信验证码" autocomplete="off">
                             </div>
                         </div>
                         <div class="tishi"></div>
                     </form>
                     <div class="form-group">
-<!--						下一步按钮-->
-                        <button class="btn btn-danger btn-block btn-login" id="applyBtn">下一步</button>
+                        <!-- 下一步按钮 -->
+                        <button disabled="disabled" class="btn btn-danger btn-block btn-login" id="applyBtn">下一步</button>
                     </div>
 
                 </div>
@@ -71,8 +80,7 @@
                                 <div class="input-group-addon">
                                     <i class="icon_password"></i>
                                 </div>
-                                <input type="password" class="form-control" name="password" id="password"
-                                       placeholder="重置密码" autocomplete="off">
+                                <input type="password" class="form-control" name="password" id="password" placeholder="设置密码" autocomplete="off">
                             </div>
 
                         </div>
@@ -81,25 +89,33 @@
                                 <div class="input-group-addon">
                                     <i class="icon_password"></i>
                                 </div>
-                                <input type="password" class="form-control" name="confirmpwd" id="confirmpwd"
-                                       placeholder="再次密码" autocomplete="off">
+                                <input type="password" class="form-control" name="confirmpwd" id="confirmpwd" placeholder="再次密码" autocomplete="off">
                             </div>
                         </div>
                         <div class="tishis"></div>
                         <div class="form-group">
-                            <a href="javascript:void(0);" type="submit" class="btn btn-danger btn-block btn-login"
-                               id="submitBtn">下一步</a>
+                            <a href="javascript:void(0);" type="submit" class="btn btn-danger btn-block btn-login" id="submitBtn">下一步</a>
                         </div>
                     </form>
                 </div>
                 <div class="step-list">
                     <div class="ok_style center">
-                        <h2><img src="images/ok.png"></h2>
-                        <h5 class="color2 mtb20">你已成功注册会员<b id="sec">5</b>秒后跳转到首页</h5>
+                        <h2>
+                            <img src="images/ok.png">
+                        </h2>
+                        <h5 class="color2 mtb20">
+                            你已成功注册会员
+                            <b id="sec">5</b>
+                            秒后跳转到首页
+                        </h5>
                         <a href="JavaScript：ovid()" class="btn btn-danger">首页</a>
                         <a href="JavaScript：ovid()" class="btn btn-primary">从新注册</a>
                     </div>
                 </div>
+                <form hidden="hidden" id="lain_form" th:action="@{~/userRegister}">
+                    <input  id="lain_username" name="phone">
+                    <input  id="lain_password" name="password">
+                </form>
             </div>
         </div>
     </div>
@@ -109,9 +125,14 @@
 <script src="js/TweenLite/rAF.js"></script>
 <script src="js/TweenLite/demo-1.js"></script>
 <script src="js/layer/layer.js"></script>
-<script type="text/javascript">
+<script type="text/javascript" th:inline="javascript">
 	var time = 6;
 	var InterValObj;
+	var sms;
+	window.onload = function () {
+        document.getElementById("applyBtn").disabled = true;
+    }
+
 	function timer() {
 		if (time==0){
 			// layer.msg("成功");
@@ -131,14 +152,50 @@
 	function SendSMS() {
 		//获取用户输入的手机号
 		var telephone = $("#phone").val();
-		alert(telephone);
 		if(!(/^1(3|4|5|6|7|8|9)\d{9}$/.test(telephone))){
-			layer.msg("手机号码有误，请重填");
+            layer.msg("手机号码有误，请重填");
 			return;
 		}
+        $("#lain_username").val(telephone);
+		//发送ajax请求
+		$.post(
+		    // 发送的url
+            [[@{~/sms}]],
+            //数据
+            {"phone":telephone},
+            //回调函数
+            function (data) {
+                sms = data.sms;
+                layer.msg("验证码已发送");
+
+            },
+            //数据格式
+            "json"
+        )
 		$("#sms-input").attr("disabled",true);
 		InterValObj = window.setInterval(timer,1000);
 	}
+
+	//按钮验证码离焦事件
+    $("#sms-code").blur(function () {
+        // alert("离焦");
+        var smsCode = $("#sms-code").val();
+        // var sms = [[${session.sms}]]        错误方法
+        if (smsCode == sms){
+
+            // $("#lain_password").val("");
+
+            layer.msg("验证码正确");
+            document.getElementById("applyBtn").disabled = false;
+
+        }else {
+            layer.msg("验证码错误，请重新输入")
+            $("#sms-code").focus();
+        }
+
+    });
+
+
 </script>
 </body>
 </html>
