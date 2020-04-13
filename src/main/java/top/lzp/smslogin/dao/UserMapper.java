@@ -11,6 +11,10 @@ public interface UserMapper {
 
     @Insert("insert into user(phone,password) values(#{phone},#{password})")
     void save(User user);
+
     @Select("select * from user where phone=#{phone} and password = #{password}")
     User findUserByPhoneAndPassword(User user);
+
+    @Select("select * from user where phone = #{phone}")
+    User findUserByPhone(String phone);
 }

@@ -21,4 +21,10 @@ public class UserServiceImpl implements UserService {
 
         return temp==null?false:true;
     }
+
+    @Override
+    public boolean findUserByPhone(String phone) {
+        User temp = userMapper.findUserByPhone(phone);
+        return temp==null?true:false;
+    }
 }

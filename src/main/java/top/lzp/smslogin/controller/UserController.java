@@ -39,6 +39,7 @@ public class UserController {
         boolean success = userService.findUserByPhoneAndPassword(user);
         if (success){
             //找到数据，登录成功
+            session.setAttribute("user",user);
             return "redirect:index";
         }else {
             // 没有找到用户，登录失败
@@ -47,15 +48,25 @@ public class UserController {
         }
     }
 
-
+    //短信验证码
     @RequestMapping("/sms")
     @ResponseBody
     public String smsCode(String phone){
 //        System.out.println(phone);
         //保护机制 如果用户注册过了不发送短信
-        String sms = SMS(phone);
+        //select * from user where phone = #{phone}
+        boolean success = userService.findUserByPhone(phone);
         String json = null;
-        json = "{\"message\":"+true+",\"sms\":\""+sms+"\"}";
+        if (success){
+            //该用户没有注册
+            String sms = SMS(phone);
+
+            json = "{\"message\":"+true+",\"sms\":\""+sms+"\"}";
+
+        }else {
+            //用户注册过了
+            json ="{\"message\":"+false+"}";
+        }
         return json;
     }
 
@@ -86,7 +97,7 @@ public class UserController {
         //id:1400349533
         //key:6402ddc20e5c50b93f4adb975f1432af
         //拿到发送短信的核心类
-       /* SmsSingleSender ssender = new SmsSingleSender(1400349533,"6402ddc20e5c50b93f4adb975f1432af");
+        SmsSingleSender ssender = new SmsSingleSender(1400349533,"6402ddc20e5c50b93f4adb975f1432af");
         //发送短信
         try {
             SmsSingleSenderResult result = ssender.sendWithParam("86", phoneNumber, templateId, params,
@@ -97,7 +108,7 @@ public class UserController {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }*/
+        }
         return code;
     }
 
